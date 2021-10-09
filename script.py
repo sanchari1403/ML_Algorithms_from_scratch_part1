@@ -163,8 +163,7 @@ def testOLERegression(w,Xtest,ytest):
     # IMPLEMENT THIS METHOD
     # MSE=1/N∑i=1 to N(yi−wTxi)^2
     N=np.shape(Xtest)[0]
-    d=np.shape(Xtest)[1]
-    mse=(1/N)*np.sum(ytest-np.dot(w.T,Xtest)**2)
+    mse=np.dvide(np.sum(ytest-np.dot(w.T,Xtest))**2,N)
 
     return mse
 
@@ -174,7 +173,13 @@ def regressionObjVal(w, X, y, lambd):
     # to w (vector) for the given data X and y and the regularization parameter
     # lambda                                                                  
 
-    # IMPLEMENT THIS METHOD                                             
+    # IMPLEMENT THIS METHOD 
+    N = np.shape(X)[0] 
+    term=(y-np.dot(X,w))
+    error=(0.5)*np.dot(term.T,term) + (0.5*lambd)*np.dot(w.T,w)   
+
+    error_grad= np.dot(np.dot(X.T,X),w) - np.dot(X.T,y) + lambd*w
+    
     return error, error_grad
 
 def mapNonLinear(x,p):
@@ -185,7 +190,12 @@ def mapNonLinear(x,p):
     # Xp - (N x (p+1)) 
 	
     # IMPLEMENT THIS METHOD
+    Xp = np.zeros((np.shape(X)[0], p + 1))
+    for p in range(1, p + 1):
+        Xp[:,p] = np.power(x,p)
+    
     return Xp
+    
 
 # Main script
 
