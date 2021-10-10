@@ -164,8 +164,6 @@ def testOLERegression(w,Xtest,ytest):
     
     # IMPLEMENT THIS METHOD
     # MSE=1/N∑i=1 to N(yi−wTxi)^2
-    if ytest.shape[0]!=Xtest.shape[0]:
-        print(ytest.shape,Xtest.shape)
     N=np.shape(Xtest)[0]
     mse=(np.sum(np.subtract(ytest,np.dot(Xtest,w))**2))/N
 
