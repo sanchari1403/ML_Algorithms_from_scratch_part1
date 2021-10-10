@@ -149,8 +149,10 @@ def learnRidgeRegression(X,y,lambd):
 
     # IMPLEMENT THIS METHOD 
     # w = (λI + XTX)^−1*XTy  
-    w = np.dot(inv(lambd*np.eye(np.shape(X)[1]) + np.dot(X.T,X)),np.dot(X.T,y))           
-    return w
+    xTy=np.dot(X.T,y)
+    xTinv=inv(np.dot(lambd,np.eye(np.shape(X)[1],dtype=int)) + np.dot(X.T,X))
+    w = np.dot(xTinv,xTy)           
+    return w    
 
 def testOLERegression(w,Xtest,ytest):
     # Inputs:
@@ -162,8 +164,10 @@ def testOLERegression(w,Xtest,ytest):
     
     # IMPLEMENT THIS METHOD
     # MSE=1/N∑i=1 to N(yi−wTxi)^2
+    if ytest.shape[0]!=Xtest.shape[0]:
+        print(ytest.shape,Xtest.shape)
     N=np.shape(Xtest)[0]
-    mse=np.dvide(np.sum(ytest-np.dot(w.T,Xtest))**2,N)
+    mse=(np.sum(np.subtract(ytest,np.dot(Xtest,w))**2))/N
 
     return mse
 
@@ -174,13 +178,13 @@ def regressionObjVal(w, X, y, lambd):
     # lambda                                                                  
 
     # IMPLEMENT THIS METHOD 
-    N = np.shape(X)[0] 
-    term=(y-np.dot(X,w))
+    w=w.reshape((np.shape(w)[0],1))
+    term=y-np.dot(X,w)
     error=(0.5)*np.dot(term.T,term) + (0.5*lambd)*np.dot(w.T,w)   
 
     error_grad= np.dot(np.dot(X.T,X),w) - np.dot(X.T,y) + lambd*w
     
-    return error, error_grad
+    return error.flatten(), error_grad.flatten()
 
 def mapNonLinear(x,p):
     # Inputs:                                                                  
@@ -190,10 +194,11 @@ def mapNonLinear(x,p):
     # Xp - (N x (p+1)) 
 	
     # IMPLEMENT THIS METHOD
-    Xp = np.zeros((np.shape(X)[0], p + 1))
-    for p in range(1, p + 1):
-        Xp[:,p] = np.power(x,p)
-    
+    N=np.shape(x)[0]
+    Xp = np.ones((N, p+1))
+    for rows in range(0,N):
+        for cols in range(0,p+1):
+            Xp[rows,cols] = x[rows]**cols
     return Xp
     
 
@@ -238,7 +243,7 @@ plt.contourf(x1,x2,zqdares.reshape((x1.shape[0],x2.shape[0])),alpha=0.3)
 plt.scatter(Xtest[:,0],Xtest[:,1],c=ytest.ravel())
 plt.title('QDA')
 
-plt.show()
+# plt.show()
 # Problem 2
 if sys.version_info.major == 2:
     X,y,Xtest,ytest = pickle.load(open('diabetes.pickle','rb'))
