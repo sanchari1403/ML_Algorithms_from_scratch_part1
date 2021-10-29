@@ -1,4 +1,3 @@
-from functools import total_ordering
 import numpy as np
 from scipy.optimize import minimize
 from scipy.io import loadmat
@@ -81,7 +80,7 @@ def ldaTest(means,covmat,Xtest,ytest):
 
     # IMPLEMENT THIS METHOD
     D = means.shape[0]
-    labels = np.unique(ytest)
+    labels = [i for i in range(1,means.shape[1]+1)]
     ypred = []
     for row in range(0,len(Xtest)):
         likelihoods = []
@@ -109,7 +108,7 @@ def qdaTest(means,covmats,Xtest,ytest):
 
     # IMPLEMENT THIS METHOD
     D = means.shape[0]
-    labels = np.unique(ytest)
+    labels = [i for i in range(1,means.shape[1]+1)]
     ypred = []
     for row in range(0,len(Xtest)):
         likelihoods = []
@@ -197,6 +196,7 @@ def mapNonLinear(x,p):
     for rows in range(0,N):
         for cols in range(0,p+1):
             Xp[rows,cols] = x[rows]**cols
+    
     return Xp
     
 
@@ -279,8 +279,8 @@ plt.title('MSE for Train Data')
 plt.subplot(1, 2, 2)
 plt.plot(lambdas,mses3)
 plt.title('MSE for Test Data')
-
 plt.show()
+
 # Problem 4
 k = 101
 lambdas = np.linspace(0, 1, num=k)
@@ -311,10 +311,9 @@ plt.title('MSE for Test Data')
 plt.legend(['Using scipy.minimize','Direct minimization'])
 plt.show()
 
-
 # Problem 5
 pmax = 7
-lambda_opt = 0 # REPLACE THIS WITH lambda_opt estimated from Problem 3
+lambda_opt = 0.06 # REPLACE THIS WITH lambda_opt estimated from Problem 3
 mses5_train = np.zeros((pmax,2))
 mses5 = np.zeros((pmax,2))
 for p in range(pmax):
